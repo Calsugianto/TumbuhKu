@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TumbuhKu - Cek Tumbuh Kembang Anak</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#17313b;--bg:#eef5f1;--card:#fff;--green:#2a8a5a;--gd:#1d6b44;--sun:#f0b429;--red:#d64545;--mute:#5d737b;--line:#d5e3dc}
+*{box-sizing:border-box}
+body{margin:0;font-family:Nunito,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.5}
+header{background:linear-gradient(#bfe6d0,#eef5f1);padding:14px 16px 0}.hw{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;align-items:end}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.logo{font-weight:800;font-size:1.2rem;color:var(--gd)}.stat{background:#fff;border-left:6px solid var(--sun);padding:8px 12px;border-radius:8px;font-weight:600;font-size:.95rem}.hero svg{background:none;border:0;max-width:300px;margin:0 auto;display:block}.steps{max-width:760px;margin:12px auto 0;padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.steps div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;font-size:.88rem}.steps b{display:block}.steps i{font-style:normal;font-size:1.6rem}dialog{border:0;border-radius:14px;max-width:340px;width:90%}dialog::backdrop{background:#17313b99}.alt{background:#fff;color:var(--gd);border:2px solid var(--green)}@media(max-width:640px){.hw{grid-template-columns:1fr}.steps{grid-template-columns:1fr}}
+.wrap{max-width:760px;margin:0 auto}
+h1{margin:0;font-size:1.9rem;line-height:1.2;font-weight:800;color:var(--ink)}
+header p{margin:8px 0 0}
+.top button{background:#fff;color:var(--gd);border:0;border-radius:8px;padding:6px 12px;margin-left:6px;font:inherit;font-weight:800;cursor:pointer}
+nav{display:flex;gap:6px;padding:10px 16px;max-width:760px;margin:0 auto}
+nav button{flex:1;padding:12px 6px;border:2px solid var(--line);background:#fff;border-radius:10px;font:inherit;font-weight:800;color:var(--ink);cursor:pointer}
+nav button.on{background:var(--green);border-color:var(--green);color:#fff}
+main{max-width:760px;margin:0 auto;padding:0 16px 40px}
+section{display:none;background:var(--card);border-radius:14px;padding:18px;border:1px solid var(--line)}
+section.on{display:block}
+label{display:block;font-weight:800;margin:12px 0 4px}
+input,select{width:100%;padding:12px;font:inherit;border:2px solid var(--line);border-radius:10px;background:#fff}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--sun);outline-offset:1px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.go{margin-top:16px;width:100%;padding:14px;border:0;border-radius:12px;background:var(--green);color:#fff;font:inherit;font-weight:800;font-size:1.1rem;cursor:pointer}
+.res{margin-top:16px;border-radius:12px;padding:14px;border-left:8px solid}
+.res.ok{background:#e4f4ea;border-color:var(--green)}.res.warn{background:#fdf3d7;border-color:var(--sun)}.res.bad{background:#fbe3e3;border-color:var(--red)}
+.res b{font-size:1.15rem}
+.note{color:var(--mute);font-size:.88rem;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:.8rem;font-weight:800}
+.t-ok{background:#cfeedc}.t-warn{background:#fbe4a6}.t-bad{background:#f6c4c4}
+.scroll{overflow-x:auto}
+.del{background:none;border:0;color:var(--red);font-size:1.1rem;cursor:pointer}
+.day{border:1px solid var(--line);border-radius:12px;margin-top:10px;overflow:hidden}
+.day h3{margin:0;padding:8px 12px;background:#e4f4ea;font-size:1rem;display:flex;justify-content:space-between}
+.day div.m{padding:6px 12px;display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--line)}
+.day span.k{color:var(--mute);white-space:nowrap}
+.sum{background:var(--ink);color:#fff;border-radius:12px;padding:12px 14px;margin-top:14px}
+svg{width:100%;height:auto;background:#f8fbf9;border-radius:10px;border:1px solid var(--line)}
+@media(max-width:420px){.row{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:no-preference){.res{animation:p .3s}@keyframes p{from{transform:scale(.97);opacity:0}}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap hw"><div><div class="top"><span class="logo">TumbuhKu</span><span><button id="lang" onclick="toggleLang()">EN</button><button id="auth" onclick="authOpen()"></button></span></div><h1 data-i="h1"></h1><p data-i="desc"></p><p class="stat" data-i="stat"></p></div>
+<svg viewBox="0 0 300 220" aria-hidden="true"><circle cx="240" cy="50" r="28" fill="#f0b429"/><path d="M0 170Q80 120 160 165T300 150V220H0Z" fill="#7cc79b"/><path d="M0 195Q100 160 200 190T300 180V220H0Z" fill="#2a8a5a"/><rect x="40" y="60" width="14" height="140" rx="3" fill="#fff" stroke="#17313b" stroke-width="2"/><path d="M40 80h8M40 100h8M40 120h8M40 140h8M40 160h8M40 180h8" stroke="#17313b" stroke-width="2"/><circle cx="120" cy="105" r="14" fill="#8d5a3b"/><path d="M100 198L108 122H132L140 198Z" fill="#d64545"/><circle cx="178" cy="152" r="10" fill="#8d5a3b"/><rect x="168" y="162" width="20" height="36" rx="5" fill="#f0b429"/><path d="M132 135L168 170" stroke="#8d5a3b" stroke-width="5" stroke-linecap="round"/></svg></div></header>
+<div class="steps"><div><i>&#128207;</i><b data-i="s1"></b><span data-i="s1d"></span></div><div><i>&#128200;</i><b data-i="s2"></b><span data-i="s2d"></span></div><div><i>&#127858;</i><b data-i="s3"></b><span data-i="s3d"></span></div></div>
+<dialog id="dlg"><h2 data-i="login"></h2><label data-i="user"></label><input id="u" autocomplete="username"><label data-i="pass"></label><input id="p" type="password" autocomplete="current-password"><p id="aerr" class="note"></p><button type="button" class="go" onclick="authGo('login')" data-i="login"></button><button type="button" class="go alt" onclick="authGo('register')" data-i="reg"></button><button type="button" class="go alt" onclick="dlg.close()" data-i="close"></button></dialog>
+<nav id="nav"></nav>
+<main>
+<p class="note" id="guestnote" data-i="guest"></p>
+<section id="s0">
+  <label id="l_name"></label><input id="cname" autocomplete="off">
+  <div class="row"><div><label id="l_sex"></label><select id="sex"></select></div>
+  <div><label id="l_dob"></label><input id="dob" type="date"></div></div>
+  <div class="row"><div><label id="l_h"></label><input id="h" type="number" step="0.1" inputmode="decimal"></div>
+  <div><label id="l_w"></label><input id="w" type="number" step="0.1" inputmode="decimal"></div></div>
+  <button class="go" id="b_check" onclick="check()"></button>
+  <div id="out"></div>
+  <p class="note" id="n_disc"></p>
+</section>
+<section id="s1">
+  <label id="l_who"></label><select id="who" onchange="renderHist()"></select>
+  <div id="chart" style="margin-top:12px"></div>
+  <div class="scroll"><table id="hist"></table></div>
+</section>
+<section id="s2">
+  <div class="row"><div><label id="l_bud"></label><input id="bud" type="number" inputmode="numeric" placeholder="150000"></div>
+  <div><label id="l_kid"></label><select id="kid" onchange="plan()"></select></div></div>
+  <label id="l_type"></label><select id="mtype" onchange="plan()"></select>
+  <button class="go" id="b_plan" onclick="plan()"></button>
+  <div id="menu"></div>
+  <p class="note" id="n_menu"></p>
+</section>
+<section id="s3"><h2 data-i="adm"></h2><div class="scroll"><table id="atu"></table></div><h3 data-i="arec"></h3><div class="scroll"><table id="atr"></table></div></section>
+</main>
+<script>
+// ---------- Text (Indonesian default / English) ----------
+const T={id:{tag:"Pantau tumbuh anak, cegah stunting",tabs:["Cek Anak","Riwayat","Menu 7 Hari"],name:"Nama anak",sex:"Jenis kelamin",boy:"Laki-laki",girl:"Perempuan",dob:"Tanggal lahir",h:"Tinggi / panjang badan (cm)",w:"Berat badan (kg)",check:"Cek & simpan",disc:"Alat bantu skrining berdasarkan standar WHO (0-5 tahun), bukan diagnosis. Bawa anak ke posyandu atau puskesmas untuk pemeriksaan resmi.",need:"Isi semua kolom dengan benar (usia 0-60 bulan).",age:"Usia",mo:"bulan",ht:"Tinggi menurut usia",wt:"Berat menurut usia",who:"Pilih anak",empty:"Belum ada data. Isi di tab Cek Anak.",date:"Tanggal",cm:"Tinggi",kg:"Berat",st:"Status",bud:"Anggaran makan 1 minggu (Rp)",kid:"Anak",plan:"Buat menu",budErr:"Isi anggaran mingguan.",day:["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"],meals:["Sarapan","Makan siang","Makan malam"],total:"Total perkiraan",left:"Sisa anggaran",low:"Anggaran sangat kecil. Menu termurah ditampilkan; cari bantuan di posyandu/puskesmas.",young:"Bayi di bawah 6 bulan cukup ASI saja (tanpa makanan lain).",soft:"Usia 6-11 bulan: haluskan/lunakkan makanan, lanjutkan ASI.",boost:"Menu ini menambah protein hewani (telur/ikan/hati) karena anak perlu mengejar pertumbuhan.",norm:"Menu seimbang hemat. Tambah buah murah (pisang/pepaya) dan air matang.",n_menu:"Harga perkiraan per porsi anak, bisa berbeda di tiap daerah. Tambahkan ASI untuk anak di bawah 2 tahun.",none:"Belum ada anak tersimpan. Cek anak dulu, atau menu umum dipakai.",gen:"Umum (sehat)",s:["Normal","Pendek","Sangat pendek","Normal","Kurang","Sangat kurang"],advice:["Bagus! Lanjutkan makan bergizi dan timbang tiap bulan.","Perlu perhatian: tambah protein hewani dan periksa ke posyandu/puskesmas.","Segera periksa ke puskesmas/tenaga kesehatan."]},
+en:{tag:"Track child growth, prevent stunting",tabs:["Check","History","7-Day Menu"],name:"Child's name",sex:"Sex",boy:"Boy",girl:"Girl",dob:"Date of birth",h:"Height / length (cm)",w:"Weight (kg)",check:"Check & save",disc:"Screening aid based on WHO standards (0-5 years), not a diagnosis. Visit a posyandu or health centre for an official check.",need:"Please fill every field correctly (age 0-60 months).",age:"Age",mo:"months",ht:"Height-for-age",wt:"Weight-for-age",who:"Select child",empty:"No data yet. Add a check first.",date:"Date",cm:"Height",kg:"Weight",st:"Status",bud:"Food budget for 1 week (Rp)",kid:"Child",plan:"Make menu",budErr:"Enter a weekly budget.",day:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],meals:["Breakfast","Lunch","Dinner"],total:"Estimated total",left:"Budget left",low:"Budget is very low. Showing the cheapest menu; ask your posyandu/health centre for support.",young:"Babies under 6 months need breast milk only (no other food).",soft:"Age 6-11 months: mash or soften food, keep breastfeeding.",boost:"This menu adds animal protein (egg/fish/liver) because the child needs to catch up.",norm:"Balanced low-cost menu. Add cheap fruit (banana/papaya) and boiled water.",n_menu:"Prices are rough per child portion and vary by region. Keep breastfeeding under age 2.",none:"No saved child yet. Check a child first, or the general menu is used.",gen:"General (healthy)",s:["Normal","Stunted","Severely stunted","Normal","Underweight","Severely underweight"],advice:["Great! Keep up nutritious meals and weigh monthly.","Needs attention: add animal protein and visit the posyandu/health centre.","Please see a health worker soon."]}};
+let L=localStorage.getItem("tk_lang")||"id";
+const t=k=>T[L][k];
+// ---------- WHO anchors at months 0,6,12,18,24,36,48,60: [median, -2SD, -3SD] ----------
+const M=[0,6,12,18,24,36,48,60];
+const D={
+ hB:[[49.9,46.1,44.2],[67.6,63.3,61.2],[75.7,71.0,68.6],[82.3,76.9,74.0],[87.8,81.0,78.0],[96.1,89.2,85.0],[103.3,94.9,90.7],[110.0,100.7,96.1]],
+ hG:[[49.1,45.4,43.6],[65.7,61.2,58.9],[74.0,68.9,66.3],[80.7,74.9,72.0],[86.4,80.0,76.7],[95.1,88.7,84.1],[102.7,94.1,89.8],[109.4,99.9,95.2]],
+ wB:[[3.3,2.5,2.1,4.4],[7.9,6.4,5.7,9.8],[9.6,7.7,6.9,12.0],[10.9,8.8,7.8,13.7],[12.2,9.7,8.6,15.3],[14.3,11.3,10.0,18.3],[16.3,12.7,11.2,21.2],[18.3,14.1,12.4,24.2]],
+ wG:[[3.2,2.4,2.0,4.2],[7.3,5.7,5.0,9.3],[8.9,7.0,6.1,11.5],[10.2,8.1,7.1,13.2],[11.5,9.0,8.0,14.8],[13.9,10.8,9.5,18.1],[16.1,12.3,10.8,21.5],[18.2,13.7,11.8,24.9]]};
+function ref(key,m){let i=0;while(i<M.length-2&&m>M[i+1])i++;const f=(m-M[i])/(M[i+1]-M[i]);return D[key][i].map((v,j)=>v+(D[key][i+1][j]-v)*f)}
+function cls(v,r){return v<r[2]?2:v<r[1]?1:0}
+function clw(v,r){return v<r[2]?2:v<r[1]?1:v>r[3]?3:0}
+const sev=(a,b)=>a==2||b==2?2:(a==1||b==1||b==3)?1:0;
+const esc=x=>String(x).replace(/[&<>"']/g,c=>"&#"+c.charCodeAt(0)+";");
+const ageM=d=>{const b=new Date(d),n=new Date();return (n-b)/2629800000};
+// ---------- Storage ----------
+let DB=[],ROLE=localStorage.getItem("tk_role")||"",TK=localStorage.getItem("tk_token")||"";
+const load=()=>DB;
+const lget=()=>{try{return(JSON.parse(localStorage.getItem("tk_data"))||[]).map((r,i)=>({...r,id:r.id||i+1}))}catch(e){return[]}};
+const lset=a=>{try{localStorage.setItem("tk_data",JSON.stringify(a))}catch(e){}};
+async function api(p,m,b){const r=await fetch("/api/"+p,{method:m||"GET",headers:{"Content-Type":"application/json",Authorization:"Bearer "+TK},body:b?JSON.stringify(b):undefined});if(!r.ok)throw new Error((await r.json().catch(()=>({}))).error||r.status);return r.json()}
+async function sync(){if(TK){try{DB=await api("records");return}catch(e){if(String(e.message)=="unauthorized"){TK="";ROLE="";localStorage.removeItem("tk_token")}else{DB=lget();return}}}DB=lget()}
+async function add(rec){let ok=true;if(TK){try{await api("records","POST",rec)}catch(e){ok=false}}else{rec.id=Date.now();lset([...lget(),rec])}await sync();return ok}
+async function del(id){if(TK){try{await api("records/"+id,"DELETE")}catch(e){}}else lset(lget().filter(r=>r.id!=id));await sync();fillKids();renderHist()}
+function authUI(){auth.textContent=TK?t("out")+" ("+localStorage.getItem("tk_user")+")":t("login");guestnote.style.display=TK?"none":"block"}
+function authOpen(){if(TK){TK="";ROLE="";cur=0;localStorage.removeItem("tk_token");localStorage.removeItem("tk_role");sync().then(setText);return}aerr.textContent="";dlg.showModal()}
+async function authGo(kind){try{const r=await api(kind,"POST",{username:u.value.trim(),password:p.value});TK=r.token;ROLE=r.role||"";localStorage.setItem("tk_token",TK);localStorage.setItem("tk_role",ROLE);localStorage.setItem("tk_user",r.username);p.value="";for(const g of lget())await api("records","POST",g).catch(()=>{});lset([]);dlg.close();await sync();if(ROLE=="admin")cur=3;setText()}catch(e){aerr.textContent=t("bad")+" ("+e.message+")"}}
+Object.assign(T.id,{h1:"Anak sehat, tumbuh tinggi, bebas stunting",desc:"TumbuhKu membantu orang tua mengecek tinggi dan berat anak dengan standar WHO, menyimpan riwayatnya, dan menyusun menu seminggu yang murah dan bergizi sesuai anggaran keluarga.",stat:"Sekitar 1 dari 5 anak Indonesia masih mengalami stunting. Deteksi dini dan gizi yang tepat bisa mencegahnya.",s1:"1. Ukur anak",s1d:"Isi tinggi, berat, dan tanggal lahir.",s2:"2. Lihat hasil",s2d:"Dapat status WHO dan grafik riwayat.",s3:"3. Menu hemat",s3d:"Menu 7 hari sesuai kondisi anak dan anggaran.",login:"Masuk",reg:"Daftar",user:"Nama pengguna",pass:"Kata sandi (min. 6 huruf)",close:"Tutup",out:"Keluar",guest:"Mode tamu: data hanya tersimpan di HP ini. Masuk agar riwayat tersimpan aman di server dan bisa dibuka dari HP lain.",bad:"Gagal"});
+Object.assign(T.en,{h1:"Healthy kids, growing tall, stunting-free",desc:"TumbuhKu helps parents check their child's height and weight against WHO standards, keep a growth history, and get a low-cost, nutritious weekly menu that fits the family budget.",stat:"About 1 in 5 Indonesian children still experience stunting. Early detection and the right nutrition can prevent it.",s1:"1. Measure",s1d:"Enter height, weight and birth date.",s2:"2. See results",s2d:"Get a WHO status and a growth chart.",s3:"3. Low-cost menu",s3d:"A 7-day menu that fits the child and budget.",login:"Log in",reg:"Register",user:"Username",pass:"Password (min. 6 chars)",close:"Close",out:"Log out",guest:"Guest mode: data stays on this phone only. Log in to keep your history safely on the server and open it from any device.",bad:"Failed"});
+// ---------- UI ----------
+function setText(){
+ document.documentElement.lang=L;lang.textContent=L=="id"?"EN":"ID";document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));authUI();
+ nav.innerHTML=t("tabs").concat(ROLE=="admin"?[t("adm")]:[]).map((x,i)=>`<button onclick="tab(${i})" id="t${i}">${x}</button>`).join("");
+ l_name.textContent=t("name");l_sex.textContent=t("sex");l_dob.textContent=t("dob");l_h.textContent=t("h");l_w.textContent=t("w");
+ b_check.textContent=t("check");n_disc.textContent=t("disc");l_who.textContent=t("who");l_bud.textContent=t("bud");l_kid.textContent=t("kid");
+ b_plan.textContent=t("plan");n_menu.textContent=t("n_menu");
+ const s=sex.value||"B";sex.innerHTML=`<option value="B">${t("boy")}</option><option value="G">${t("girl")}</option>`;sex.value=s;
+ const mv=mtype.value||"auto";mtype.innerHTML=Object.entries(t("mt")).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");mtype.value=mv;l_type.textContent=t("mtl");fillKids();renderHist();tab(cur)}
+let cur=0;
+function tab(i){if(i==3&&ROLE!="admin")i=0;cur=i;[0,1,2,3].forEach(n=>{document.getElementById("s"+n).classList.toggle("on",n==i);const b=document.getElementById("t"+n);if(b)b.classList.toggle("on",n==i)});if(i==1)renderHist();if(i==2)fillKids();if(i==3)adminLoad()}
+function toggleLang(){L=L=="id"?"en":"id";localStorage.setItem("tk_lang",L);setText();if(menu.innerHTML)plan()}
+const fmt=n=>"Rp"+Math.round(n).toLocaleString("id-ID");
+async function check(){
+ const n=document.getElementById("cname").value.trim(),d=dob.value,h=+document.getElementById("h").value,w=+document.getElementById("w").value,m=ageM(d);
+ if(!n||!d||!(h>20&&h<140)||!(w>1&&w<40)||m<0||m>60){out.innerHTML=`<div class="res bad">${t("need")}</div>`;return}
+ const k=sex.value,rh=ref("h"+k,m),rw=ref("w"+k,m),ch=cls(h,rh),cw=clw(w,rw),worst=sev(ch,cw);
+ const rec={n,k,d:new Date().toISOString().slice(0,10),m:+m.toFixed(1),h,w,ch,cw};
+ const ok=await add(rec);
+ const c=["ok","warn","bad"][worst];
+ out.innerHTML=`<div class="res ${c}"><b>${t("age")}: ${Math.floor(m)} ${t("mo")}</b><p>${t("ht")}: <b>${t("s")[ch]}</b> (${t("cm")} ${h} cm, ${rh[0].toFixed(1)} cm median)<br>${t("wt")}: <b>${t("s")[3+cw]}</b> (${w} kg, ${rw[0].toFixed(1)} kg median)</p><p>${cw==3&&ch==0?t("advO"):t("advice")[worst]}</p><p class="note">${ok?(TK?t("savedS"):t("savedG")):t("saveFail")}</p></div>`;
+ fillKids();renderHist()}
+function kids(){return [...new Set(load().map(r=>r.n))]}
+function fillKids(){
+ const ks=kids(),opt=ks.map(x=>`<option>${x}</option>`).join("");
+ const pw=who.value;who.innerHTML=opt;if(ks.includes(pw))who.value=pw;
+ const pk=kid.value;kid.innerHTML=`<option value="">${t("gen")}</option>`+opt;kid.value=ks.includes(pk)?pk:(ks[ks.length-1]||"")}
+function renderHist(){
+ const rs=load().filter(r=>r.n==who.value);
+ if(!rs.length){hist.innerHTML=`<tr><td>${t("empty")}</td></tr>`;chart.innerHTML="";return}
+ hist.innerHTML=`<tr><th>${t("date")}</th><th>${t("age")}</th><th>${t("cm")}</th><th>${t("kg")}</th><th>${t("st")}</th><th></th></tr>`+rs.map(r=>{const w=sev(r.ch,r.cw);return `<tr><td>${r.d}</td><td>${Math.floor(r.m)} ${t("mo")}</td><td>${r.h}</td><td>${r.w}</td><td><span class="tag ${["t-ok","t-warn","t-bad"][w]}">${t("s")[r.ch]}</span></td><td><button class="del" aria-label="delete" onclick="del(${r.id})">&times;</button></td></tr>`}).join("");
+ // chart: height vs age with median and -2SD curves
+ const k=rs[0].k,W=640,H=300,p=40,xs=m=>p+m/60*(W-p-10),ys=v=>H-p-(v-40)/80*(H-p-10);
+ const line=(j,c,dash)=>`<polyline fill="none" stroke="${c}" stroke-width="2" ${dash?'stroke-dasharray="6 4"':""} points="${Array.from({length:61},(_,m)=>xs(m)+","+ys(ref("h"+k,m)[j])).join(" ")}"/>`;
+ const pts=rs.map(r=>`<circle cx="${xs(r.m)}" cy="${ys(r.h)}" r="6" fill="${["#2a8a5a","#f0b429","#d64545"][r.ch]}" stroke="#17313b" stroke-width="1.5"/>`).join("");
+ const path=`<polyline fill="none" stroke="#17313b" stroke-width="2" points="${rs.map(r=>xs(r.m)+","+ys(r.h)).join(" ")}"/>`;
+ const ax=[0,12,24,36,48,60].map(m=>`<text x="${xs(m)}" y="${H-14}" font-size="12" text-anchor="middle" fill="#5d737b">${m}</text>`).join("")+[50,70,90,110].map(v=>`<text x="4" y="${ys(v)+4}" font-size="12" fill="#5d737b">${v}</text><line x1="${p}" x2="${W-10}" y1="${ys(v)}" y2="${ys(v)}" stroke="#d5e3dc"/>`).join("");
+ chart.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${t("ht")}">${ax}${line(0,"#2a8a5a")}${line(1,"#d64545",1)}${path}${pts}<text x="${W-10}" y="16" font-size="12" text-anchor="end" fill="#5d737b">${t("ht")} (cm) / ${t("mo")} &mdash; median &amp; -2SD</text></svg>`}
+// ---------- Menu planner ----------
+// [id name, en name, cost Rp per child portion, animal protein?]
+const NB=[["Bubur nasi + telur rebus + bayam","Rice porridge + boiled egg + spinach",3000,1],["Bubur kacang hijau","Mung bean porridge",2000,0],["Nasi + telur dadar sayur","Rice + vegetable omelette",3500,1],["Ubi rebus + pisang","Boiled sweet potato + banana",2000,0],["Nasi + tempe orek","Rice + stir-fried tempeh",2500,0],["Bubur ayam hati + wortel","Porridge + chicken liver + carrot",4000,1]];
+const NR=[["Nasi + tempe goreng + sayur bayam","Rice + fried tempeh + spinach soup",3000,0],["Nasi + ikan teri + sayur sop","Rice + anchovies + vegetable soup",3500,1],["Nasi + pepes ikan lele + kangkung","Rice + steamed catfish + water spinach",5000,1],["Nasi + tahu telur + sayur lodeh","Rice + tofu-egg + vegetable stew",3500,1],["Nasi + hati ayam + wortel","Rice + chicken liver + carrot",4500,1],["Nasi + telur balado ringan + kangkung","Rice + mild egg sambal + water spinach",3500,1],["Nasi + sup ikan + sayur","Rice + fish soup + vegetables",5000,1],["Nasi + sayur asem + tempe","Rice + sour veg soup + tempeh",2800,0],["Nasi + perkedel tahu + sayur bening","Rice + tofu patty + clear veg soup",3000,0]];
+// stunting: animal protein (egg/fish/liver) in every meal
+const SB=NB.filter(x=>x[3]).concat([["Bubur kacang hijau + telur rebus","Mung bean porridge + boiled egg",3500,1],["Nasi + telur ceplok + tempe","Rice + fried egg + tempeh",4000,1]]);
+const SR=NR.filter(x=>x[3]).concat([["Nasi + semur telur + sayur","Rice + egg stew + vegetables",3800,1]]);
+// overweight: half rice, steamed/boiled, more vegetables, no frying or sweets
+const OB=[["Ubi rebus + telur rebus","Boiled sweet potato + boiled egg",3000,1],["Bubur kacang hijau tanpa gula","Unsweetened mung bean porridge",1800,0],["Pepaya + tahu kukus","Papaya + steamed tofu",2500,0],["Nasi 1/2 porsi + telur rebus + lalapan","Half rice + boiled egg + raw veg",3000,1]];
+const OR=[["Nasi 1/2 porsi + pepes ikan + sayur bening","Half rice + steamed fish + clear veg soup",4500,1],["Sup ikan + banyak sayur (tanpa goreng)","Fish soup + lots of veg (no frying)",4500,1],["Nasi 1/2 porsi + tahu kukus + capcay","Half rice + steamed tofu + stir-fry veg",3200,0],["Nasi 1/2 porsi + ayam rebus + sayur sop","Half rice + boiled chicken + vegetable soup",4800,1],["Nasi 1/2 porsi + tempe kukus + tumis kangkung","Half rice + steamed tempeh + water spinach",2800,0]];
+function plan(){
+ const bud=+document.getElementById("bud").value;
+ if(!bud){menu.innerHTML=`<div class="res warn">${t("budErr")}</div>`;return}
+ const rec=load().filter(r=>r.n==kid.value).pop();
+ if(rec&&rec.m<6){menu.innerHTML=`<div class="res warn">${t("young")}</div>`;return}
+ let ty=mtype.value;
+ if(ty=="auto")ty=!rec?"normal":(rec.ch>0||rec.cw==1||rec.cw==2)?"stunt":rec.cw==3?"over":"normal";
+ const P={stunt:[SB,SR],normal:[NB,NR],over:[OB,OR]}[ty];
+ let html=rec&&rec.m<12?`<div class="res warn">${t("soft")}</div>`:"";
+ const per=bud/7,slot=[.25,.4,.35];let total=0,cheap=false,days="";
+ const pick=(pool,limit,d,s)=>{let c=pool.filter(x=>x[2]<=limit);if(!c.length){c=[...pool].sort((a,b)=>a[2]-b[2]).slice(0,2);cheap=true}return c[(d*2+s)%c.length]};
+ for(let d=0;d<7;d++){
+   let rows="",dc=0;
+   for(let s=0;s<3;s++){
+     const f=pick(s==0?P[0]:P[1],per*slot[s],d,s);dc+=f[2];
+     rows+=`<div class="m"><span><b>${t("meals")[s]}:</b> ${L=="id"?f[0]:f[1]}</span><span class="k">${fmt(f[2])}</span></div>`}
+   total+=dc;days+=`<div class="day"><h3><span>${t("day")[d]}</span><span>${fmt(dc)}</span></h3>${rows}</div>`}
+ html+=`<div class="res ${ty=="normal"?"ok":"warn"}"><b>${t("mt")[ty]}</b><br>${t("tip_"+ty)}</div>`;
+ if(cheap||total>bud)html+=`<div class="res bad">${t("low")}</div>`;
+ menu.innerHTML=html+days+`<div class="sum">${t("total")}: <b>${fmt(total)}</b> &nbsp;|&nbsp; ${t("left")}: <b>${fmt(Math.max(0,bud-total))}</b></div>`}
+// ---------- Admin ----------
+let AR=[];
+async function adminLoad(){
+ let AU;try{[AU,AR]=await Promise.all([api("admin/users"),api("admin/records")])}catch(e){return}
+ atu.innerHTML=`<tr><th>ID</th><th>${t("user")}</th><th>Role</th><th>#</th><th></th></tr>`+AU.map(u=>`<tr><td>${u.id}</td><td>${esc(u.username)}</td><td>${u.role}</td><td>${u.n}</td><td>${u.role=="admin"?"":`<button class="del" title="password" onclick="aPw(${u.id})">&#128273;</button><button class="del" onclick="aDelU(${u.id})">&times;</button>`}</td></tr>`).join("");
+ atr.innerHTML=`<tr><th>ID</th><th>${t("user")}</th><th>${t("name")}</th><th>${t("date")}</th><th>${t("cm")}</th><th>${t("kg")}</th><th>${t("st")}</th><th></th></tr>`+AR.map(r=>`<tr><td>${r.id}</td><td>${esc(r.user)}</td><td>${esc(r.n)}</td><td>${r.d}</td><td>${r.h}</td><td>${r.w}</td><td><span class="tag ${["t-ok","t-warn","t-bad"][sev(r.ch,r.cw)]}">${t("s")[r.ch]} / ${t("s")[3+r.cw]}</span></td><td><button class="del" onclick="aEdit(${r.id})">&#9998;</button><button class="del" onclick="aDelR(${r.id})">&times;</button></td></tr>`).join("")}
+async function aDelR(id){if(confirm("Delete record "+id+"?")){await api("admin/records/"+id,"DELETE");adminLoad()}}
+async function aDelU(id){if(confirm("Delete user "+id+" and all records?")){await api("admin/users/"+id,"DELETE");adminLoad()}}
+async function aPw(id){const pw=prompt("New password (min 6)");if(pw&&pw.length>=6){try{await api("admin/users/"+id+"/password","POST",{password:pw});alert("OK")}catch(e){alert(e.message)}}}
+async function aEdit(id){
+ const r=AR.find(x=>x.id==id),n=prompt(t("name"),r.n);if(n===null)return;
+ const d=prompt(t("date")+" (YYYY-MM-DD)",r.d),h=+prompt(t("cm")+" (cm)",r.h),w=+prompt(t("kg")+" (kg)",r.w);
+ try{await api("admin/records/"+id,"PUT",{n:n.trim(),k:r.k,d,m:r.m,h,w,ch:cls(h,ref("h"+r.k,r.m)),cw:clw(w,ref("w"+r.k,r.m))})}catch(e){alert(t("bad")+": "+e.message)}adminLoad()}
+Object.assign(T.id,{s:["Normal","Pendek","Sangat pendek","Normal","Kurang","Sangat kurang","Berat berlebih"],adm:"Admin",arec:"Semua data anak",advO:"Berat badan di atas normal. Kurangi gorengan dan minuman manis, perbanyak sayur dan bermain aktif. Konsultasikan ke puskesmas.",savedS:"Tersimpan di akun Anda.",savedG:"Tersimpan di HP ini (mode tamu).",saveFail:"Gagal menyimpan ke server. Coba lagi.",mtl:"Jenis menu",mt:{auto:"Otomatis (sesuai kondisi anak)",stunt:"Stunting / kurang gizi",normal:"Normal",over:"Berat berlebih"},tip_stunt:"Protein hewani (telur, ikan, hati) di setiap makan. Tambah camilan padat gizi seperti telur rebus atau bubur kacang hijau di sela waktu makan.",tip_normal:"Menu seimbang dan hemat. Tambah buah murah (pisang/pepaya) dan air matang.",tip_over:"Nasi setengah porsi, lauk dikukus/direbus, sayur lebih banyak. Hindari gorengan, minuman manis, dan jajanan kemasan."});
+Object.assign(T.en,{s:["Normal","Stunted","Severely stunted","Normal","Underweight","Severely underweight","Overweight"],adm:"Admin",arec:"All child records",advO:"Weight is above normal. Cut fried food and sweet drinks, add vegetables and active play. Talk to your health centre.",savedS:"Saved to your account.",savedG:"Saved on this phone (guest mode).",saveFail:"Could not save to the server. Please retry.",mtl:"Menu type",mt:{auto:"Automatic (matches the child)",stunt:"Stunting / undernourished",normal:"Normal",over:"Overweight"},tip_stunt:"Animal protein (egg, fish, liver) at every meal. Add a nutrient-dense snack such as a boiled egg or mung bean porridge between meals.",tip_normal:"Balanced low-cost menu. Add cheap fruit (banana/papaya) and boiled water.",tip_over:"Half portion of rice, steamed/boiled protein, more vegetables. Avoid fried food, sweet drinks and packaged snacks."});
+sync().then(setText);
+</script>
+</body>
+</html>
